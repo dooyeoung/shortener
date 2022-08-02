@@ -5,10 +5,9 @@ from sqlalchemy.orm.session import Session
 from werkzeug.local import LocalProxy
 from werkzeug.wrappers import Request
 
-
-from app.config import create_database_session
-from app.service.url import UrlService
+from app.orm import database_sessionmaker
 from app.repository.url import SQLAlchemyUrlRepository
+from app.service.url import UrlService
 
 
 def get_app_context() -> typing.Tuple[
@@ -23,17 +22,6 @@ def get_app_context() -> typing.Tuple[
 
 def get_config():
     return get_app_context()[0]
-
-
-@LocalProxy
-def database_session():
-    app_config, ctx = get_app_context()
-    session = getattr(ctx, "_current_database_session", None)
-    if session is None:
-        session = create_database_session(app_config["DATABASE"])
-        setattr(ctx, "_current_database_session", session)
-
-    return session
 
 
 @LocalProxy
@@ -53,7 +41,9 @@ def url_service():
     if url_service is None:
         url_service = UrlService(
             url_repository=url_repository,
-            session=database_session,
+            sessionmaker=database_sessionmaker(
+                app_config["DATABASE"]
+            ),
             base_url=app_config["BASE_URL"],
         )
         setattr(ctx, "_url_service", url_service)
