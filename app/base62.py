@@ -11,12 +11,10 @@ def encode(num, alphabet=BASE62):
         if num == 0:
             return alphabet[0]
         arr = []
-        arr_append = arr.append  # Extract bound-method for faster access.
-        _divmod = divmod  # Access to locals is faster.
         base = len(alphabet)
         while num:
-            num, rem = _divmod(num, base)
-            arr_append(alphabet[rem])
+            num, rem = divmod(num, base)
+            arr.append(alphabet[rem])
         arr.reverse()
         return ''.join(arr)
 
