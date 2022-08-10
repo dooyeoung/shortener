@@ -4,7 +4,7 @@ from flask_smorest import abort, Blueprint
 
 
 from app.context import url_service
-from app.shcema.url import ShortUrlSchema, UrlSchema, UrlRedirectSchema, UrlShortenerSchema
+from app.schema.url import ShortUrlSchema, UrlSchema, UrlRedirectSchema, UrlShortenerSchema
 from app.exc import NotFoundUrl
 
 blp = Blueprint("url", __name__, description="Operations on url")
