@@ -18,6 +18,14 @@ class UrlService():
         self.sessionmaker = sessionmaker
         self.base_url = base_url
 
+
+    def get_all(self):
+        with session_scope(self.sessionmaker) as session:
+            return self.url_repository.get_all(
+                session=session
+            )
+
+
     def shorten(self, source_url):
         with session_scope(self.sessionmaker) as session:
             result = self.url_repository.get_url_by_source_url(
@@ -37,7 +45,7 @@ class UrlService():
 
         return urljoin(self.base_url, short_id)
 
-    
+
     def get_source_url(self, short_id):
         with session_scope(self.sessionmaker) as session:
             return self.url_repository.get_url_by_short_id(
