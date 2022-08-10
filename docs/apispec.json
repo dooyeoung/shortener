@@ -1,0 +1,243 @@
+{
+  "paths": {
+    "/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Url"
+                  }
+                },
+                "example": {
+                  "source_url": "https://naver.com",
+                  "id": 1,
+                  "short_id": "dddddL"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/DEFAULT_ERROR"
+          }
+        },
+        "tags": [
+          "url"
+        ]
+      }
+    },
+    "/{short_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "short_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "$ref": "#/components/responses/UNPROCESSABLE_ENTITY"
+          },
+          "301": {
+            "description": "Moved Permanently"
+          },
+          "default": {
+            "$ref": "#/components/responses/DEFAULT_ERROR"
+          }
+        },
+        "summary": "/short_id",
+        "description": "\ub2e8\ucd95 Url\uc758 \uc6d0\ub798 \ud398\uc774\uc9c0\ub85c \uc774\ub3d9",
+        "tags": [
+          "url"
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "short_id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      ]
+    },
+    "/shorten/": {
+      "post": {
+        "responses": {
+          "422": {
+            "$ref": "#/components/responses/UNPROCESSABLE_ENTITY"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortUrl"
+                },
+                "example": {
+                  "url": "https://shortener.com/dddddL"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/DEFAULT_ERROR"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UrlShortener"
+              },
+              "example": {
+                "url": "https://naver.com"
+              }
+            }
+          }
+        },
+        "summary": "/shorten/",
+        "description": "\ub2e8\ucd95 url \uc0dd\uc131",
+        "tags": [
+          "url"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "My API",
+    "version": "v1"
+  },
+  "tags": [
+    {
+      "name": "url",
+      "description": "Operations on url"
+    }
+  ],
+  "openapi": "3.0.2",
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "description": "Errors"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "status": {
+            "type": "string",
+            "description": "Error name"
+          },
+          "code": {
+            "type": "integer",
+            "description": "Error code"
+          }
+        }
+      },
+      "PaginationMetadata": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          },
+          "first_page": {
+            "type": "integer"
+          },
+          "last_page": {
+            "type": "integer"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "previous_page": {
+            "type": "integer"
+          },
+          "next_page": {
+            "type": "integer"
+          }
+        }
+      },
+      "Url": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "short_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "short_id",
+          "source_url"
+        ]
+      },
+      "UrlShortener": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "ShortUrl": {
+        "type": "object",
+        "properties": {
+          "short_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "short_url"
+        ]
+      }
+    },
+    "responses": {
+      "DEFAULT_ERROR": {
+        "description": "Default error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "UNPROCESSABLE_ENTITY": {
+        "description": "Unprocessable Entity",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}
