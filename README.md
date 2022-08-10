@@ -30,3 +30,17 @@
     ``` bash
     python run.py --env prod
     ```
+
+
+## API 문서 생성
+- redoc-cli 설치
+```
+npm i -g redoc-cli
+```
+
+- 문서 추출 후 렌더링
+```
+FLASK_APP=app.wsgi:create_wsgi_app flask openapi write --format=json docs/apispec.json
+
+redoc-cli build docs/apispec.json -o docs/index.html
+```
